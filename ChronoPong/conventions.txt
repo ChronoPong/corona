@@ -1,6 +1,0 @@
-Variable names
-	all camel case
-	buttons: exampleBtn/anotherExampleBtn
-	scenes: exampleScn
-	groups: exampleGrp
-
