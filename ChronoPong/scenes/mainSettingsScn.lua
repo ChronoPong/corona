@@ -16,14 +16,14 @@ function scene:create( event )
     -- Initialize the scene here.
     -- Example: add display objects to "sceneGroup", add touch listeners, etc.
     local function menuGoto()
-        composer.gotoScene("menuScn")
+        composer.gotoScene("scenes.menuScn")
         
     end
 
 
     local function alertBox()
       
-            composer.gotoScene("alertBoxScn",{params={background=display.captureScreen()}})
+            composer.gotoScene("scenes.alertBoxScn",{params={background=display.captureScreen()}})
         
     end
     local color = {

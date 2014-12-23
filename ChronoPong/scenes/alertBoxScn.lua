@@ -19,12 +19,12 @@ function scene:create( event )
 
     local function okPressed(event)
         
-            composer.gotoScene("mainSettingsScn")
+            composer.gotoScene("scenes.mainSettingsScn")
             composer.setVariable("username",username)
        
     end
     local function cancelPressed()
-        composer.gotoScene("mainSettingsScn") 
+        composer.gotoScene("scenes.mainSettingsScn") 
     
     end
     

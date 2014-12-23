@@ -49,7 +49,7 @@ function scene:create( event )
         settingsBtn:addEventListener( "tap", function() composer.gotoScene("scenes.mainSettingsScn") end)
     end
  
-    composer.removeScene("splashScn")
+    composer.removeScene("scenes.splashScn")
     createBackground()
     createHighscoreUsername()
     createButtons()
