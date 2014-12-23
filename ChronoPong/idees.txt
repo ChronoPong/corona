@@ -1,0 +1,23 @@
+code cleanup
+
+settings 
+	-menu button - general settings
+		-set name etc
+	-room specific 	- paddle shape
+			- ball velocity (fixed/variable)
+
+buttons
+	-back button(hierarchy)
+
+server broadcast availability
+
+networking logic
+
+gameplay
+
+graphics
+
+ads
+
+gloria - check wifi
+	
