@@ -5,79 +5,57 @@ local scene = composer.newScene()
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
 -- -----------------------------------------------------------------------------------------------------------------
 -- local forward references should go here
-local background
+
 -- -------------------------------------------------------------------------------
 
--- "scene:create()"
 function scene:create( event )
-
     local sceneGroup = self.view
 
-    -- Initialize the scene here.
-    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
-
-    background = display.newImage( "slo.png" )
-    background:translate( 320, 480 )
-    background.alpha = 0
+    -- Set the background image.
+    background = display.newImage( "resources/icons/splashScreenImg.jpg" )
+    background:translate( 320, 400 )
     sceneGroup:insert( background )
+
+    -- Set ChronoPong caption
+    title = display.newText( {x=320, y = 650, text  = "ChronoPong", fontSize = 80} )
+    sceneGroup:insert(title)
+
 end
 
-
--- "scene:show()"
 function scene:show( event )
-
     local sceneGroup = self.view
     local phase = event.phase
 
+    --After 2s, goes to menuScn
+    local function startOut( event )
+        timer.performWithDelay( 2000,
+            function() 
+                composer.gotoScene("scenes.menuScn",{effect="fade",time=700})
+            end
+        )
+    end
+
     if ( phase == "will" ) then
-        -- Called when the scene is still off screen (but is about to come on screen).
+        -- Do nothing
     elseif ( phase == "did" ) then
-        -- Called when the scene is now on screen.
-        -- Insert code here to make the scene come alive.
-        -- Example: start timers, begin animation, play audio, etc.
-
-        function gotoMenu()
-            local options =
-                {
-                    effect = "fade",                 
-                }
-             composer.gotoScene ("menuScn",options)
-       end
-       
-       function startOut( event )
-          transition.fadeOut( background)
-          timer2 = timer.performWithDelay(1000,gotoMenu)
-        end
-
-        timer1 = timer.performWithDelay( 2000, startOut)  -- wait 2 seconds
-        transition.fadeIn( background, {time = 1000} )
-        --transition.fadeOut( background, {time = 1000} )
-       
+        -- Call startOut() to start the animation of the splashscreen.
+       startOut(event)
     end
 end
 
-
--- "scene:hide()"
 function scene:hide( event )
-
-    local sceneGroup = self.views
+    local sceneGroup = self.view
     local phase = event.phase
 
     if ( phase == "will" ) then
-        -- Called when the scene is on screen (but is about to go off screen).
-        -- Insert code here to "pause" the scene.
-        -- Example: stop timers, stop animation, stop audio, etc.
+        -- Do nothing
     elseif ( phase == "did" ) then
-        -- Called immediately after scene goes off screen.
+        -- Do nothing
     end
 end
 
-
--- "scene:destroy()"
 function scene:destroy( event )
-
     local sceneGroup = self.view
-    
 end
 
 ---------------------------------------------------------------------------------
@@ -88,7 +66,7 @@ scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
 scene:addEventListener( "destroy", scene )
 
--- -------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
 
 return scene
 

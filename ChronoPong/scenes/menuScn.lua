@@ -1,6 +1,6 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
-local scoreLib=require("scoreLib")
+local scoreLib=require("lib.scoreLib")
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
 -- -----------------------------------------------------------------------------------------------------------------
@@ -14,109 +14,73 @@ local username,paddleColour
 
 -- -------------------------------------------------------------------------------
   
--- "scene:create()"
 function scene:create( event )
     local sceneGroup = self.view  
-    local menuheight = 200
-    --lastScore = 0
-    composer.setVariable("username","User1")
-    composer.setVariable("lastScore", "0")
-    -- Initialize the scene here.
-    -- Example: add display objects to "sceneGroup", add touch listeners, etc.
-
-    title = display.newText( {x=320, y = 50, text  = "MultiPong", fontSize = 80} )
-    username = display.newText( {x=50, y = display.contentHeight-50, text  = composer.getVariable("username"), fontSize = 35} )
-    --Create Score Dispaly
-    scoreDisplay = display.newImage(sceneGroup, "scores.png"  )
-    scoreDisplay:translate( display.contentCenterX, display.contentCenterY+170 )
-
     
-    singleplayerBtn = display.newText( {x=320,y=menuheight +0, text = "Single Player",fontSize = 45 } )
-    multiplayerBtn =   display.newText( {x=320,y=menuheight+100, text = "MultiPlayer",fontSize = 45 } )
-    settingsBtn =   display.newText( {x=320,y=menuheight+200, text = "Settings",fontSize = 45 } )
-    scoresLabel = display.newText( {x=320,y=526, text = "ScoreBoard",fontSize = 40 } )
-    scoresLabelHighest = display.newText( {x=320,y=595, text = "High Score",fontSize = 40 } )
-    scoresLabelLast = display.newText( {x=320,y=685, text = "Last Score",fontSize = 40 } )
+    local function createBackground()
+        title = display.newText( {x=320, y = 50, text  = "ChronoPong", fontSize = 80} )
+        sceneGroup:insert(title)
+    end
+   
+    local function createHighscoreUsername()
+        scoreText = scoreLib.init({
+            fontSize = 30,
+            --font = "Helvetica",
+            x = display.contentCenterX,
+            y = 720,
+            maxDigits = 7,
+            leadingZeros = true,
+            filename = "scorefile.txt",
+        })
+        composer.setVariable("username","User1")
+        username = display.newText( {x=50, y = display.contentHeight-50, text  = composer.getVariable("username"), fontSize = 35} )
+        sceneGroup:insert( username)
+        sceneGroup:insert(scoreText)
+    end
 
-    lastScore = display.newText({x =320 , y=630, text = composer.getVariable("lastScore"), fontSize = 30})
-    sceneGroup:insert(scoresLabel )
-    sceneGroup:insert(scoresLabelHighest )
-    sceneGroup:insert(scoresLabelLast )
-    sceneGroup:insert(lastScore)
-    sceneGroup:insert(multiplayerBtn)
-    sceneGroup:insert(singleplayerBtn)
-    sceneGroup:insert(settingsBtn)
-    sceneGroup:insert(title)
-    sceneGroup:insert( username)
+    local function createButtons()
+        playBtn = display.newText( {x=320,y=500, text = "Single Player",fontSize = 45 } )
+        settingsBtn =   display.newText( {x=320,y=700, text = "Settings",fontSize = 45 } )
+        
+        sceneGroup:insert(playBtn)
+        sceneGroup:insert(settingsBtn)
+
+        playBtn:addEventListener( "tap", function() composer.gotoScene("playScn") end)
+        settingsBtn:addEventListener( "tap", function() composer.gotoScene("mainSettingsScn") end)
+    end
+ 
     composer.removeScene("splashScn")
-	
-	scoreText = scoreLib.init({
-		fontSize = 30,
-		--font = "Helvetica",
-		x = display.contentCenterX,
-		y = 720,
-		maxDigits = 7,
-		leadingZeros = true,
-		filename = "scorefile.txt",
-    })
-    sceneGroup:insert(scoreText)
-    function multiplayerScnGoto( event )
-        
-        composer.gotoScene("multiplayerScn")
-    
-    end
-
-    function mainSettingsGoto(event)
-       -- if (event.phase=="ended") then
-            composer.gotoScene("mainSettingsScn")
-       -- end
-    end
-
-    function singleplayerGoto(event)
-        
-        composer.gotoScene("ninjaPongScn")
-        
-    end
-                
-    singleplayerBtn:addEventListener( "tap", singleplayerGoto )
-    multiplayerBtn:addEventListener( "tap", multiplayerScnGoto )
-    settingsBtn:addEventListener( "tap", mainSettingsGoto )
-
-
+    createBackground()
+    createHighscoreUsername()
+    createButtons()
 end
 
-
--- "scene:show()"
 function scene:show( event )
     local sceneGroup = self.view
     local phase = event.phase
 
     if ( phase == "will" ) then
-        -- Called when the scene is still off screen (but is about to come on screen).
 		highscore = scoreLib.load()
         scoreText.text=highscore
     elseif ( phase == "did" ) then
         username.text=composer.getVariable("username")
-        print(username.text.." in menu")
-        lastScore.text = composer.getVariable("lastScore")
-       
-        -- Called when the scene is now on screen.
-        -- Insert code here to make the scene come alive.
-        -- Example: start timers, begin animation, play audio, etc.
     end
 end
 
 
+function scene:hide( event )
+    local sceneGroup = self.views
+    local phase = event.phase
 
--- "scene:destroy()"
+    if ( phase == "will" ) then
+        -- Do nothing
+    elseif ( phase == "did" ) then
+        -- Do nothing
+    end
+end
+
 function scene:destroy( event )
     local sceneGroup = self.view
- 
-    
-    --title ,singleplayerBtn,multiplayerBtn = nil , nil ,nil
-    -- Called prior to the removal of scene's view ("sceneGroup").
-    -- Insert code here to clean up the scene.
-    -- Example: remove display objects, save state, etc.
 end
 
 -- -------------------------------------------------------------------------------
