@@ -1,7 +1,7 @@
 local composer = require( "composer" )
 local physics = require("physics")
 local scene = composer.newScene()
-local scoreLib=require("scoreLib")
+local scoreLib=require("lib.scoreLib")
 display.fps = 200
 
 -- -----------------------------------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ function scene:create( event )
         ball.isFixedRotation = true
         ball.isBullet= true
         ball:setLinearVelocity(400,400)
-        ballImage = display.newImage( "face.png" , ball.x, ball.y  )
+        ballImage = display.newImage( "resources/icons/face.png" , ball.x, ball.y  )
         ballImage:scale(0.15,0.15)
        
         
@@ -70,7 +70,7 @@ function scene:create( event )
         
         function makeObstacle(x,y)
             --local obstacle=display.newRect(sceneGroup,x,y,80,80)
-            local obstacle = display.newImage( "mine.png" ,x,y)
+            local obstacle = display.newImage( "resources/icons/mine.png" ,x,y)
             obstacle:scale( 0.5,0.5)
             obstacle.alpha=0.2
                            transition.fadeIn( obstacle, {time = 1000, onComplete = function ()
@@ -125,7 +125,7 @@ function scene:create( event )
                 print("gameOverListener")
                 Runtime:removeEventListener("enterFrame",score )
                 downWall:removeEventListener("collision",gameOverListener)
-                composer.gotoScene("menuScn")
+                composer.gotoScene("scenes.menuScn")
             end
         end
         
@@ -208,7 +208,7 @@ function scene:create( event )
                     end})
                -- end})
                     
-                paddleImage = display.newImageRect(sceneGroup, "paddle.png", ((event.xStart-xEnd)^2+(event.yStart-yEnd)^2)^0.5, 20 )
+                paddleImage = display.newImageRect(sceneGroup, "resources/icons/paddle.png", ((event.xStart-xEnd)^2+(event.yStart-yEnd)^2)^0.5, 20 )
                 paddleImage.alpha=0.2
                 paddleImage.rotation=(360/(2*math.pi))*(math.atan((yEnd-event.yStart)/(xEnd-event.xStart)))
                 paddleImage.x = (event.xStart+xEnd)*0.5

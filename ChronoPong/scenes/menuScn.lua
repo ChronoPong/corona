@@ -45,8 +45,8 @@ function scene:create( event )
         sceneGroup:insert(playBtn)
         sceneGroup:insert(settingsBtn)
 
-        playBtn:addEventListener( "tap", function() composer.gotoScene("playScn") end)
-        settingsBtn:addEventListener( "tap", function() composer.gotoScene("mainSettingsScn") end)
+        playBtn:addEventListener( "tap", function() composer.gotoScene("scenes.playScn") end)
+        settingsBtn:addEventListener( "tap", function() composer.gotoScene("scenes.mainSettingsScn") end)
     end
  
     composer.removeScene("splashScn")
