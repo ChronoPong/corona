@@ -32,7 +32,8 @@ function scene:create( event )
     sceneGlobal = sceneGroup
     ball=makeBall()
     upWall,downWall,leftWall,rightWall,upWall=makeWalls()
-   
+    makeSpiral()
+
     sceneGroup:insert(upWall)
     sceneGroup:insert(downWall)
     sceneGroup:insert(leftWall)
@@ -302,6 +303,28 @@ end
 
 --]]
 ------------------------------------------CLOCK CODE------------------------------------------------
+------------------------------------------SPIRAL CODE ----------------------------------------------
+function makeSpiral()
+    local angle=4.5*math.pi/180
+    local theta,x,y,dx,dy
+    for i=0,179 do
+        local line
+        theta=i*angle+math.pi
+        x=theta*math.cos(theta)+display.contentWidth*0.5
+        y=display.contentHeight-theta*math.sin(theta)-display.contentHeight*0.5
+        dyCalc=(theta*math.sin(theta)-math.cos(theta))/(math.sin(theta)+theta*math.cos(theta))
+        dxCalc=1
+        dyActual=dyCalc/(dyCalc^2+dxCalc^2)^0.5 * 300
+        dxActual=dxCalc/(dyCalc^2+dxCalc^2)^0.5 * 300
+        line=display.newLine(x-dxActual,y-dyActual,x+dxActual,y+dyActual)
+        line:setStrokeColor(0,0,1)
+        sceneGlobal:insert(line)
+    end
+end
+
+
+------------------------------------------SPIRAL CODE ----------------------------------------------
+
 ------------------------------------------WALL CODE------------------------------------------------
 
 function makeWalls()
