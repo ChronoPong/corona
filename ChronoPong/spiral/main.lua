@@ -3,13 +3,13 @@ local seconds={}
 local current=1
 local mins=0
 local rotTime = 3000
-while angle<270 do
+while angle<270+720 do
 	
 	local x1,y1,second
 	x1=320+250*math.cos(angle*2*math.pi/360)
 	--if(angle<180) then
 	
-		y1=480+250*math.sin(angle*2*math.pi/360)
+	y1=480+250*math.sin(angle*2*math.pi/360)
 	
 	--else
 		--y1=200+(300+200*math.sin(angle))
@@ -17,12 +17,14 @@ while angle<270 do
 		
 	--end
 		
-	seconds[((angle+90)/6)+1]=display.newText((angle+90)/6,x1,y1,native.systemFont, 20)
+	--seconds[((angle+90)/6)+1]=display.newText((angle+90)/6,x1,y1,native.systemFont, 20)
+	seconds[((angle+90)/6)+1]=display.newRect(x1,y1,40, 5)
+	seconds[((angle+90)/6)+1].rotation = angle
 	angle=angle+6
 end
 
-transitionpar = {time = rotTime, x = 640/2, y = 960/2,alpha = 0, iterations = 0,}
-for i=1 ,60 do
-	transitionpar = {time = rotTime, x = 640/2, y = 960/2,alpha = 0, iterations = 0,delay = i * rotTime/60}
+--transitionpar = {time = rotTime, x = 640/2, y = 960/2,alpha = 0, iterations = 0,}
+for i=1 ,180 do
+	transitionpar = {time = rotTime, x = 640/2, y = 960/2,alpha = 0, iterations = 0,delay = i * rotTime/180}
 	transition.to(seconds[i],transitionpar)
 end
