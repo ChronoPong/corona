@@ -1,6 +1,7 @@
 local composer = require( "composer" )
 local scene = composer.newScene()
 local scoreLib=require("lib.scoreLib")
+
 -- -----------------------------------------------------------------------------------------------------------------
 -- All code outside of the listener functions will only be executed ONCE unless "composer.removeScene()" is called.
 -- -----------------------------------------------------------------------------------------------------------------
@@ -11,12 +12,10 @@ local scoreDisplay,scoresLabel, scoresLabelHighest, scoresLabelLast
 local username,paddleColour
 
 
-
 -- -------------------------------------------------------------------------------
   
 function scene:create( event )
     local sceneGroup = self.view  
-    
     local function createBackground()
         title = display.newText( {x=320, y = 50, text  = "ChronoPong", fontSize = 80} )
         sceneGroup:insert(title)
@@ -40,7 +39,7 @@ function scene:create( event )
 
     local function createButtons()
         playBtn = display.newText( {x=320,y=500, text = "Single Player",fontSize = 45 } )
-        settingsBtn =   display.newText( {x=320,y=700, text = "Settings",fontSize = 45 } )
+        settingsBtn =   display.newText( {x=320,y=650, text = "Settings",fontSize = 45 } )
         
         sceneGroup:insert(playBtn)
         sceneGroup:insert(settingsBtn)
