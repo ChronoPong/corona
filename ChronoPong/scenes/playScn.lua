@@ -21,7 +21,8 @@ local makeWalls,setUpWallColor,upWallCollision,gameOverListener
 local makeObstacle,score
 --Ball functions
 local makeBall,makeTrail,getBallSpeed
-
+--Spiral functions
+local makeSpiral,spiralListener,turnLineToGraphic
 
 -- -------------------------------------------------------------------------------
 
@@ -72,6 +73,7 @@ function scene:show( event )
         upWall:setStrokeColor(0,0,1)
 
         Runtime:addEventListener("enterFrame",score)
+        Runtime:addEventListener("enterFrame", spiralListener)
         downWall:addEventListener("collision",gameOverListener)
         upWall:addEventListener("collision",upWallCollision)
         Runtime:addEventListener("touch",makePaddle)
@@ -307,6 +309,7 @@ end
 function makeSpiral()
     local angle=4.5*math.pi/180
     local theta,x,y,dx,dy
+    
     local lineLength=300
     local spiralWidth=50
     for i=0,179 do
@@ -318,14 +321,49 @@ function makeSpiral()
         dxCalc=1
         dyActual=dyCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
         dxActual=dxCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
-        line=display.newLine(x-dxActual,y-dyActual,x+dxActual,y+dyActual)
-        line:setStrokeColor(0,0,1)
+        local  x1,y1,x2,y2=x-dxActual,y-dyActual,x+dxActual,y+dyActual
+        line=display.newLine(x1,y1,x2,y2)
+        turnLineToGraphic(x1,y1,x2,y2,0.3)
+        line.alpha=0
+        --line:setStrokeColor(0,0,1)
         sceneGlobal:insert(line)
         print(i,x,y,dyCalc,dxCalc,dyActual,dxActual)
     end
+
+    --[[
+    lineLength=30
+    spiralWidth=18
+    for i=0,179 do
+        local line
+        theta=i*angle+math.pi
+        x=spiralWidth*theta*math.cos(theta)+display.contentWidth*0.5
+        y=display.contentHeight-spiralWidth*theta*math.sin(theta)-display.contentHeight*0.5
+        dyCalc=(spiralWidth*theta*math.sin(theta)-spiralWidth*math.cos(theta))/(spiralWidth*math.sin(theta)+spiralWidth*theta*math.cos(theta))
+        dxCalc=1
+        dyActual=dyCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
+        dxActual=dxCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
+        local x1,y1,x2,y2=x-dxActual,y+dyActual,x+dxActual,y-dyActual
+        line=display.newLine(x1,y1,x2,y2)
+        turnLineToGraphic(x1,y1,x2,y2,0.7)
+        line.alpha=0
+        sceneGlobal:insert(line)
+        print(i,x,y,dyCalc,dxCalc,dyActual,dxActual)
+    end
+    --]]
 end
 
+function spiralListener()
 
+end
+function turnLineToGraphic(x1,y1,x2,y2,a)
+    local lineGraphic = display.newImageRect("resources/icons/paddle.png", ((x1-x2)^2+(y1-y2)^2)^0.5, 20 )
+    lineGraphic.alpha=a
+    lineGraphic.rotation=(360/(2*math.pi))*(math.atan((y2-y1)/(x2-x1)))
+    lineGraphic.x = (x1+x2)*0.5
+    lineGraphic.y = (y1+y2)*0.5
+    --lineGraphic:setFillColor(0,1,0)
+    sceneGlobal:insert(lineGraphic)
+end
 ------------------------------------------SPIRAL CODE ----------------------------------------------
 
 ------------------------------------------WALL CODE------------------------------------------------
@@ -340,7 +378,7 @@ function makeWalls()
    
     upWallBlock = display.newRoundedRect( display.contentWidth/2, 50, display.contentWidth-5, 95, 10 )
     upWallBlock:setFillColor( 0,0,0 )
-    upWallBlock.alpha = 0.4
+    upWallBlock.alpha = 0.6
     return upWall,downWall,leftWall,rightWall,upWallBlock
 end
 
