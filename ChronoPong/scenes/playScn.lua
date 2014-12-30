@@ -368,8 +368,8 @@ function spiralListener()
         spiralLines[(timeInMiniSeconds%60)].alpha=0.3
     end
     if timeInMiniSeconds%60==0 then
-        spiralLines[timeInMiniSeconds/60+59].alpha=0.3
-        spiralLines[timeInMiniSeconds/60+60].alpha=0.7
+        transition.to(spiralLines[timeInMiniSeconds/60+59],{time=400,alpha=0.3})
+        transition.to(spiralLines[timeInMiniSeconds/60+60],{time=600,alpha=0.7})
     end
 
 end
