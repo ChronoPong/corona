@@ -10,7 +10,7 @@ while angle<270+720 do
 	y1=480+250*math.sin(angle*2*math.pi/360)
 
 	--seconds[((angle+90)/6)+1]=display.newText((angle+90)/6,x1,y1,native.systemFont, 20)
-	seconds[ind]=display.newImageRect("../resources/icons/paddle.png",40, 20)
+	seconds[ind]=display.newImageRect("../resources/icons/paddle.png",50, 20)
 	seconds[ind].x,seconds[ind].y=x1,y1
 	seconds[ind].rotation = angle
 	--seconds[ind]:setFillColor(0,0,1)

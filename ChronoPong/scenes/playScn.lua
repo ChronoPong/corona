@@ -10,8 +10,8 @@ physics.start()
 
 -- local forward references should go here
 --variables
-local sceneGlobal, ball, upWall, leftWall, downWall, rightWall,currentScore,score,paddleCount,trail1ball,trail2ball,seconds,minutes,timeInSeconds,secondTimer, transitionSecondIn,transitionSecondOut
-local bombs,powerUps={false,false,false},{false,false,false}
+local sceneGlobal, ball, upWall, leftWall, downWall, rightWall,currentScore,score,paddleCount,trail1ball,trail2ball,timeInMiniSeconds,secondTimer, transitionSecondIn,transitionSecondOut
+local bombs,powerUps,spiralLines={false,false,false},{false,false,false},{}
 --Functions
 --Paddle functions
 local makePaddleImage,makePaddleLine,makePaddle,multiplierText
@@ -65,12 +65,16 @@ function scene:show( event )
     
     if ( phase == "will" ) then
         physics.start()
-        timeInSeconds = 0
+        timeInMiniSeconds = 0
         currentScore = 0
         paddleCount = 0
         ball:setLinearVelocity(400,400)
         ball.x,ball.y = 200,200
         upWall:setStrokeColor(0,0,1)
+
+        for i=1,#spiralLines do
+            spiralLines[i].alpha=0.3
+        end
 
         Runtime:addEventListener("enterFrame",score)
         Runtime:addEventListener("enterFrame", spiralListener)
@@ -105,6 +109,7 @@ function scene:hide( event )
         downWall:removeEventListener("collision",gameOverListener)
         upWall:removeEventListener("collision",upWallCollision)
         Runtime:removeEventListener("touch",makePaddle)
+        Runtime:removeEventListener("enterFrame", spiralListener)
         composer.setVariable("lastScore",currentScore)
         physics.pause()
 		
@@ -309,7 +314,7 @@ end
 function makeSpiral()
     local angle=4.5*math.pi/180
     local theta,x,y,dx,dy
-    
+    --make background graphic
     local lineLength=300
     local spiralWidth=50
     for i=0,179 do
@@ -322,19 +327,19 @@ function makeSpiral()
         dyActual=dyCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
         dxActual=dxCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
         local  x1,y1,x2,y2=x-dxActual,y-dyActual,x+dxActual,y+dyActual
-        line=display.newLine(x1,y1,x2,y2)
-        turnLineToGraphic(x1,y1,x2,y2,0.3)
-        line.alpha=0
-        --line:setStrokeColor(0,0,1)
+        --line=display.newLine(x1,y1,x2,y2)
+        line=turnLineToGraphic(x1,y1,x2,y2,0.2)
         sceneGlobal:insert(line)
+        --line.alpha=0
+        --line:setStrokeColor(0,0,1)
+        --sceneGlobal:insert(line)
         print(i,x,y,dyCalc,dxCalc,dyActual,dxActual)
     end
-
-    --[[
+    --make spiral
+    ---[[
     lineLength=30
     spiralWidth=18
-    for i=0,179 do
-        local line
+    for i=1,180 do
         theta=i*angle+math.pi
         x=spiralWidth*theta*math.cos(theta)+display.contentWidth*0.5
         y=display.contentHeight-spiralWidth*theta*math.sin(theta)-display.contentHeight*0.5
@@ -343,16 +348,29 @@ function makeSpiral()
         dyActual=dyCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
         dxActual=dxCalc/(dyCalc^2+dxCalc^2)^0.5 * lineLength
         local x1,y1,x2,y2=x-dxActual,y+dyActual,x+dxActual,y-dyActual
-        line=display.newLine(x1,y1,x2,y2)
-        turnLineToGraphic(x1,y1,x2,y2,0.7)
-        line.alpha=0
-        sceneGlobal:insert(line)
-        print(i,x,y,dyCalc,dxCalc,dyActual,dxActual)
+        --line=display.newLine(x1,y1,x2,y2)
+        spiralLines[i]=turnLineToGraphic(x1,y1,x2,y2,0.3)
+        --line.alpha=0
+        --sceneGlobal:insert(line)
+        sceneGlobal:insert(spiralLines[i])
+        --print(i,x,y,dyCalc,dxCalc,dyActual,dxActual)
     end
     --]]
 end
 
 function spiralListener()
+
+    timeInMiniSeconds=timeInMiniSeconds+1
+    spiralLines[(timeInMiniSeconds%60)+1].alpha=0.7
+    if timeInMiniSeconds%60==0 then
+        spiralLines[60].alpha=0.3
+    else
+        spiralLines[(timeInMiniSeconds%60)].alpha=0.3
+    end
+    if timeInMiniSeconds%60==0 then
+        spiralLines[timeInMiniSeconds/60+59].alpha=0.3
+        spiralLines[timeInMiniSeconds/60+60].alpha=0.7
+    end
 
 end
 function turnLineToGraphic(x1,y1,x2,y2,a)
@@ -362,7 +380,7 @@ function turnLineToGraphic(x1,y1,x2,y2,a)
     lineGraphic.x = (x1+x2)*0.5
     lineGraphic.y = (y1+y2)*0.5
     --lineGraphic:setFillColor(0,1,0)
-    sceneGlobal:insert(lineGraphic)
+    return lineGraphic
 end
 ------------------------------------------SPIRAL CODE ----------------------------------------------
 
